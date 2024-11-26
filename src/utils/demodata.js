@@ -64,7 +64,7 @@ export const engines = [
     statusType: "Connected", // Indicates the
     connected: true,
     datasources: microsoftazure,
-    icon: excel, // Replace with actual icon reference
+    icon: excel, 
     url: "/excel-engine",
   },
   {
@@ -73,88 +73,79 @@ export const engines = [
     statusType: "Connected Database",
     connected: true,
     datasources: sql,
-    icon: database, // Replace with actual icon reference
+    icon: database, 
     url: "/database-engine",
   },
 ];
 
 export const otherEngine = [
-  {
-    title: "Analytics Dashboard",
-    icon: dashboard, // Replace with your icon reference
-  },
+
   {
     title: "Document List",
-    icon: document, // Replace with actual icon reference
+    icon: document, 
     url: "/document-list",
   },
 ];
 
-
-export const admin = [
-  {
-    title: "Data Source Management",
-    subItems: [
+export const admin = 
+ [
       {
         title: "Business Evaluation Insights",
         url: "/business-evaluation-insights",
+      
       },
       {
         title: "Strategic Assessment Talks",
         url: "/strategic-assessment",
       },
-    ],
-    status: "Syncing",
-    statusType: "warning", // Indicates the orange color
-    connected: true,
-    datasources: ["SharePoint"],
-    icon: datasource, // For illustrative purposes, replace with your icon reference
-  },
-  {
-    title: "Model Options",
-    status: "Syncing",
-    statusType: "warning",
-    connected: true,
-    datasources: ["Google Drive"],
-    icon: model, // Replace with actual icon reference
-    url: "/model-options",
-  },
-  {
-    title: "Guardrails Management",
-    status: "Connected",
-    statusType: "success", // Indicates the green color
-    connected: true,
-    datasources: ["Amazon S3"],
-    icon: guardrails, // Replace with actual icon reference
-    url: "/guardrails-management",
-  },
-  {
-    title: "Billing Insights",
-    status: "Not Set",
-    statusType: "error", // Indicates the gray/black color
-    connected: false,
-    datasources: [],
-    icon: billing, // Replace with actual icon reference
-    url: "/billing-insights",
-  },
-  {
-    title: "Role-Based Access Control",
-    status: "Connected",
-    statusType: "success",
-    connected: true,
-    datasources: ["Microsoft Azure Blob Storage"],
-    icon: role, // Replace with actual icon reference
-    url: "/billing-insights",
-  },
-  {
-    title: "System Logs & User Management",
-    status: "Connected",
-    statusType: "success",
-    connected: true,
-    datasources: ["SQL Server"],
-    icon: system, // Replace with actual icon reference
-    url: "/role-based-access-control",
-  },
+];
+
+export const moreEngines = [
+{
+  title: "Model Options",
+  status: "Syncing",
+  statusType: "warning",
+  connected: true,
+  datasources: ["Google Drive"],
+  icon: model, 
+  url: "/model-options",
+},
+{
+  title: "Guardrails Management",
+  status: "Connected",
+  statusType: "success", 
+  connected: true,
+  datasources: ["Amazon S3"],
+  icon: guardrails, 
+  url: "/guardrails-management",
+},
+{
+  title: "Billing Insights",
+  status: "Not Set",
+  statusType: "error", 
+  connected: false,
+  datasources: [],
+  icon: billing, 
+  url: "/billing-insights",
+},
+{
+  title: "Role-Based Access Control",
+  status: "Connected",
+  statusType: "success",
+  connected: true,
+  datasources: ["Microsoft Azure Blob Storage"],
+  icon: role, // Replace with actual icon reference
+  url: "/Rolebased-Access-Control",
+},
+{
+  title: "System Logs & User Management",
+  status: "Connected",
+  statusType: "success",
+  connected: true,
+  datasources: ["SQL Server"],
+  icon: system, // Replace with actual icon reference
+  url: "/system-logs-&-User-Management",
+},
 ];
 
 export const recentActivities = [

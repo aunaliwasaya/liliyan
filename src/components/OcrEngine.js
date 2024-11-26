@@ -1,15 +1,20 @@
 import React, { useRef, useState, useEffect } from "react";
+import * as pdfjsLib from "pdfjs-dist";
+import pdfWorker from "pdfjs-dist/build/pdf.worker.min.js";
 import DragNDrop from "../svg/DragNDrop";
 import UploadFile from "../svg/UploadFile";
 import ViewDetails from "../svg/ViewDetails";
 
+pdfjsLib.GlobalWorkerOptions.workerSrc = pdfWorker;
+
 function OcrEngine() {
   const fileInputRef = useRef(null);
-  const [files, setFiles] = useState([]); // Store an array of files
-  const [fileTypes, setFileTypes] = useState([]); // Store corresponding file types
-  const [fileStatuses, setFileStatuses] = useState([]); // Store the status of each file (Processing/Complete)
-  const [selectedFile, setSelectedFile] = useState(null); // File selected for viewing
-  const [isModalVisible, setIsModalVisible] = useState(false); // Control modal visibility
+  const modalContainerRef = useRef(null); 
+  const [files, setFiles] = useState([]);
+  const [fileTypes, setFileTypes] = useState([]);
+  const [fileStatuses, setFileStatuses] = useState([]);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [isModalVisible, setIsModalVisible] = useState(false);
 
   const handleBrowseClick = () => {
     fileInputRef.current.click();
@@ -50,11 +55,47 @@ function OcrEngine() {
     setSelectedFile(null);
   };
 
+  // Render PDF Pages
+  const renderPDF = (file) => {
+    const reader = new FileReader();
+
+    reader.onload = async (event) => {
+      const pdfData = new Uint8Array(event.target.result);
+      const pdf = await pdfjsLib.getDocument({ data: pdfData }).promise;
+
+      modalContainerRef.current.innerHTML = ""; 
+
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber++) {
+        const page = await pdf.getPage(pageNumber);
+        const viewport = page.getViewport({ scale: 1 });
+
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.height = viewport.height;
+        canvas.width = viewport.width;
+
+        const renderContext = {
+          canvasContext: context,
+          viewport,
+        };
+
+        await page.render(renderContext).promise;
+        modalContainerRef.current.appendChild(canvas);
+      }
+    };
+
+    reader.readAsArrayBuffer(file);
+  };
+
+  useEffect(() => {
+    if (selectedFile && selectedFile.type === "application/pdf") {
+      renderPDF(selectedFile);
+    }
+  }, [selectedFile]);
+
   useEffect(() => {
     const timer = setTimeout(() => {
-      setFileStatuses((prevStatuses) =>
-        prevStatuses.map(() => "Complete")
-      );
+      setFileStatuses((prevStatuses) => prevStatuses.map(() => "Complete"));
     }, 5000);
 
     return () => clearTimeout(timer);
@@ -75,7 +116,7 @@ function OcrEngine() {
 
       {/* Drag and drop area */}
       <div
-        className="w-[97%] custom-dotted-border border-[1px] border-[#0056B399] rounded h-[238px] flex gap-2 items-center justify-center"
+        className="w-[97%]  border-[1px] border-[#0056B399] rounded h-[238px] custom-dotted-border flex gap-2 items-center justify-center"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -117,68 +158,73 @@ function OcrEngine() {
           </div>
         )}
 
-<div className="w-full">
-  {files.map((file, index) => (
-    <div
-      key={index}
-      className="flex justify-start items-center font-bold mb-12 ml-8 mr-10 py-[2px] rounded border-b-[1px] border-[#D8D6D6] pb-10 last:border-b-0 last:border-pb-0 "
-    >
-      <p className="w-1/4">{file.name}</p>
-      <p className="w-1/4 font-semibold">{fileTypes[index]}</p>
-      <div className="w-1/4">
-        <p
-          className={`w-[40%] text-center -ml-5 rounded text-[14px] py-1 ${
-            fileStatuses[index] === "Complete"
-              ? "bg-[#D0F9EE] text-[#19BA92]"
-              : "bg-[#0056B3] text-white"
-          }`}
-        >
-          {fileStatuses[index]}
-        </p>
-      </div>
-      <div
-        onClick={() => handleViewDetails(file)}
-        className="w-1/4 cursor-pointer"
-      >
-        <ViewDetails />
-      </div>
-    </div>
-  ))}
-</div>
-
+        <div className="w-full">
+          {files.map((file, index) => (
+            <div
+              key={index}
+              className="flex justify-start items-center font-bold mb-12 ml-8 mr-10 py-[2px] rounded border-b-[1px] border-[#D8D6D6] pb-10 last:border-b-0 last:border-pb-0 "
+            >
+              <p className="w-1/4">{file.name}</p>
+              <p className="w-1/4 font-semibold">{fileTypes[index]}</p>
+              <div className="w-1/4">
+                <p
+                  className={`w-[40%] text-center -ml-5 rounded text-[14px] py-1 ${
+                    fileStatuses[index] === "Complete"
+                      ? "bg-[#D0F9EE] text-[#19BA92]"
+                      : "bg-[#0056B3] text-white"
+                  }`}
+                >
+                  {fileStatuses[index]}
+                </p>
+              </div>
+              <div
+                onClick={() => handleViewDetails(file)}
+                className="w-1/4 cursor-pointer"
+              >
+                <ViewDetails />
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Modal */}
       {isModalVisible && selectedFile && (
-  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-    <div className="bg-black bg-opacity-50 w-full h-full flex flex-col items-center justify-center p-6 relative">
-      {/* Close Button */}
-      <button
-        onClick={handleCloseModal}
-        className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
-      >
-        Close
-      </button>
-      
-      {/* File Name */}
-      <h2 className="text-2xl font-bold mb-4">{selectedFile.name}</h2>
-      
-      {/* Content Preview */}
-      <div className="flex items-center justify-center w-full h-[80%]">
-        {selectedFile.type.startsWith("image/") ? (
-          <img
-            src={URL.createObjectURL(selectedFile)}
-            alt={selectedFile.name}
-            className="w-auto max-h-full rounded shadow"
-          />
-        ) : (
-          <p className="text-gray-700">Preview not available for this file type.</p>
-        )}
-      </div>
-    </div>
-  </div>
-)}
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white w-[80%] h-[80%] p-6 relative rounded shadow-lg overflow-auto">
+            {/* Close Button */}
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+            >
+              Close
+            </button>
 
+            {/* File Name */}
+            <h2 className="text-2xl font-bold mb-4">{selectedFile.name}</h2>
+
+            {/* Content Preview */}
+            <div
+              ref={modalContainerRef}
+              className="w-full h-[80%] flex flex-col items-center justify-center"
+            >
+              {selectedFile.type.startsWith("image/") ? (
+                <img
+                  src={URL.createObjectURL(selectedFile)}
+                  alt={selectedFile.name}
+                  className="w-auto max-h-full rounded shadow"
+                />
+              ) : selectedFile.type === "application/pdf" ? (
+                <div className="text-center">Rendering PDF...</div>
+              ) : (
+                <p className="text-gray-700">
+                  Preview not available for this file type.
+                </p>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

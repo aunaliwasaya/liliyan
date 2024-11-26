@@ -5,6 +5,7 @@ import Welcome from "../components/Welcome";
 import HomeMainContent from "../components/HomeMainContent";
 import DocumentList from "../components/DocumentList";
 import OcrEngine from "../components/OcrEngine";
+
 const Home = () => {
   return (
     <div className="flex">

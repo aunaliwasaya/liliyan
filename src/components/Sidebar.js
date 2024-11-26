@@ -1,14 +1,25 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import { toggleMoveLeft, selectMoveLeft } from '../store/sidebarSlice';
 import { useNavigate } from "react-router-dom";
 import lightlogo from "../assets/lightlogo.svg";
 import openclose from "../assets/openclose.svg";
 import unified from "../assets/unified.svg";
 import chevron from "../assets/chevron.svg";
-import { admin, engines, otherEngine } from "../utils/demodata";
+import { admin, engines, otherEngine, moreEngines } from "../utils/demodata";
+import Dropdown from "../svg/Dropdown"
+import DataSource from "../svg/DataSource";
+
 
 const Sidebar = () => {
   const [selectedItem, setSelectedItem] = useState(null);
+   const [isHidden, setIsHidden] = useState(true); 
+  //  const [moveLeft, setMoveLeft] = useState(false);
+  //  const [isHide, setIsHide] = useState(true); 
   const navigate = useNavigate();
+
+  const dispatch = useDispatch();
+  const moveLeft = useSelector(selectMoveLeft); 
 
   const handleItemClick = (itemId, url = null) => {
     setSelectedItem(itemId);
@@ -21,12 +32,21 @@ const Sidebar = () => {
     setSelectedItem(null);
     navigate("/home");
   };
+  const handleClick = () => {
+    dispatch(toggleMoveLeft()); 
+  };
 
   return (
-    <aside className="w-80 bg-[#0056B3] text-white fixed overflow-y-scroll h-screen">
+    <div className="">
+      <>
+      <aside  className={`w-80 bg-[#0056B3] text-white fixed overflow-y-scroll h-screen customsb  text-white rounded-md transition-transform duration-500 ${moveLeft ? 'translate-x-[-295px]' : 'translate-x-0'}`}>
       <div className="p-6 flex justify-between items-center">
         <img src={lightlogo} alt="logo" />
+        <div onClick={handleClick} className="cursor-pointer" >
         <img src={openclose} alt="toggle" />
+        </div>
+
+     
       </div>
 
       <div
@@ -42,88 +62,106 @@ const Sidebar = () => {
       </div>
 
       <ul className="space-y-2 mt-4 w-[95%]">
+        {/* Try Out Our Engines */}
         <li className="font-semibold p-4">Try Out Our Engines</li>
         {engines.map((engine, index) => (
-  <li
-    key={index}
-    className={`p-2 rounded-[14px] flex items-center ml-2 cursor-pointer ${
-      selectedItem === index
-        ? "border-[1px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
-        : "hover:bg-blue-800"
-    }`}
-    onClick={() => handleItemClick(index, engine.url)} // Pass the URL here
-  >
-    <img src={engine.icon} className="w-[18px] h-[18px] mx-2" alt="icon" />
-    <p className="font-[600] text-[15px]">{engine.title}</p>
-  </li>
-))}
-        <div className="h-[1px] justify-center w-[95%] mx-auto flex items-center bg-[#80B7F3]"></div>
-
-        {otherEngine.map((item, index) => (
           <li
-            key={index + engines.length}
+            key={`engine-${index}`}
             className={`p-2 rounded-[14px] flex items-center ml-2 cursor-pointer ${
-              selectedItem === index + engines.length
+              selectedItem === `engine-${index}`
                 ? "border-[1px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
                 : "hover:bg-blue-800"
             }`}
-            onClick={() => handleItemClick(index + engines.length, item.url)}
+            onClick={() => handleItemClick(`engine-${index}`, engine.url)}
+          >
+            <img src={engine.icon} className="w-[18px] h-[18px] mx-2" alt="icon" />
+            <p className="font-[600] text-[15px]">{engine.title}</p>
+          </li>
+        ))}
+        <div className="h-[1px] justify-center w-[95%] mx-auto flex items-center bg-[#80B7F3]"></div>
+
+        {/* Analytics Dashboard */}
+        <li className="font-semibold p-4">Analytics Dashboard</li>
+        {otherEngine.map((item, index) => (
+          <li
+            key={`otherEngine-${index}`}
+            className={`p-2 rounded-[14px] flex items-center ml-2 cursor-pointer ${
+              selectedItem === `otherEngine-${index}`
+                ? "border-[1px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
+                : "hover:bg-blue-800"
+            }`}
+            onClick={() => handleItemClick(`otherEngine-${index}`, item.url)}
           >
             <img src={item.icon} className="w-[18px] h-[18px] mx-2" alt="icon" />
             {item.title}
           </li>
         ))}
-        <div className="h-[1px] justify-center w-[95%] mx-auto flex items-center bg-[#80B7F3]"></div>
 
-        <li
-          className="flex justify-between items-center pr-8 cursor-pointer rounded-[14px]"
-          onClick={() => handleItemClick("admin")}
-        >
-          <div
-            className={`font-semibold p-4`}
-          >
-            Admin Area
+        <div className="h-[1px] mb-10 justify-center w-[95%] mx-auto flex items-center bg-[#80B7F3] "></div>
+
+        {/* Admin Area */}
+
+        <div className="flex items-center justify-between mx-3 ">
+          <p class=" text-[18px]">Admin Area</p>
+          <div   onClick={() => setIsHidden(!isHidden)} >
+          <Dropdown/> 
           </div>
-          <img src={chevron} alt="chevron" />
-        </li>
-        {selectedItem === "admin" &&
-          admin.map((item, index) => (
+        </div>
+        <div>
+                  {/* Analytics Dashboard */}
+                  <div>
+ 
+
+        {/* Conditionally render the hidden content */}
+        <div className={`${isHidden ? "hidden" : ""}`}>
+        <div
+          className="flex items-center ml-6 "
+        
+        >
+          <DataSource />
+          <li className="font-semibold p-4">Data Source Management</li>
+        </div>
+          {admin.map((item, index) => (
             <li
-              key={index}
-              className={`px-2 py-2 cursor-pointer hover:bg-blue-800 rounded flex items-start ${
+              key={`otherEngine-${index}`}
+              className={`p-2 rounded-[14px] flex items-center ml-6 mb-3 cursor-pointer ${
                 selectedItem === `admin-${index}`
-                  ? "border-[1px] rounded-[14px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
-                  : ""
+                  ? "border-[1px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
+                  : "hover:bg-blue-800"
               }`}
-              onClick={() => handleItemClick(`admin-${index}`)}
+              onClick={() => handleItemClick(`admin-${index}`, item.url)}
             >
-              <img src={item.icon} className="w-[18px] h-[18px] mx-2" alt="icon" />
-              <div className="flex flex-col">
-                <p className="font-[600] text-[15px]">{item.title}</p>
-                {item.subItems && (
-                  <ul className="mt-2 space-y-1 text-blue-200">
-                    {item.subItems.map((subItem, subIndex) => (
-                      <li
-                        key={subIndex}
-                        className={`cursor-pointer hover:text-blue-300 ${
-                          selectedItem === `admin-sub-${index}-${subIndex}`
-                            ? "border-[1px] rounded-[14px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
-                            : ""
-                        }`}
-                        onClick={() =>
-                          handleItemClick(`admin-sub-${index}-${subIndex}`)
-                        }
-                      >
-                        {subItem.title}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              {/* <img src={item.icon} className="w-[18px] h-[18px] mx-2" alt="icon" /> */}
+              {item.title}
             </li>
           ))}
+        </div>
+      </div>
+
+        </div>
+   
+
+        {/* More Engines */}
+        {moreEngines.map((items, index) => (
+          <li
+            key={`moreEngine-${index}`}
+            className={`p-2 rounded-[14px] flex items-center ml-2 cursor-pointer  ${
+              selectedItem === `moreEngine-${index}`
+                ? "border-[1px] border-[#80B7F3] bg-gradient-to-r from-[#0051A8] to-[#007BFF]"
+                : "hover:bg-blue-800"
+            }`}
+            onClick={() => handleItemClick(`moreEngine-${index}`, items.url)}
+          >
+            <img src={items.icon} className="w-[18px] h-[18px] mx-2" alt="icon" />
+            <p className="font-[600] text-[15px]">{items.title}</p>
+          </li>
+        ))}
       </ul>
     </aside>
+      </>
+
+    </div>
+ 
   );
 };
 
