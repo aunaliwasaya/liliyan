@@ -75,7 +75,7 @@ import sync from "../assets/sync.svg";
 
 const EngineCard = ({ title, status, datasources, icon, statusType }) => {
   return (
-    <div className="p-4 border bg-white flex flex-col h-[50%] w-[30%] rounded-[20px] ">
+    <div className="p-4 border bg-white flex flex-col h-[50%] w-[30%] md:w-[90%] lg:w-[30%] md:h-auto rounded-[20px] ">
       <div className="flex">
         <div className="bg-[#0056B3] p-2 rounded-[5px] flex items-center justify-center">
           <img src={icon} className="bg-cover" />

@@ -39,8 +39,9 @@ const Sidebar = () => {
   return (
     <div className="">
       <>
-      <aside  className={`w-80 bg-[#0056B3] text-white fixed overflow-y-scroll h-screen customsb  text-white rounded-md transition-transform duration-500 ${moveLeft ? 'translate-x-[-295px]' : 'translate-x-0'}`}>
-      <div className="p-6 flex justify-between items-center">
+      <aside  className={` sm:w-64 xl:w-64 2xl:w-80  bg-[#0056B3] text-white fixed overflow-y-scroll h-screen customsb 
+         rounded-md transition-transform duration-500 ${moveLeft ? 'xl:translate-x-[-230px] 2xl:translate-x-[-295px]' : 'translate-x-0'}`}>
+      <div className="p-4 flex justify-between items-center">
         <img src={lightlogo} alt="logo" />
         <div onClick={handleClick} className="cursor-pointer" >
         <img src={openclose} alt="toggle" />

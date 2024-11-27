@@ -17,23 +17,30 @@ const Layout = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <Sidebar />
+  
+    <Sidebar />
+
+   
+      
 
       {/* Main Section */}
       <div className="flex-1">
         {/* Header */}
+
         <Header />
+    
+      
 
         {/* The Outlet renders child routes */}
-        <div className={`p-4 ${moveLeft ? "ml-10" : "ml-80"}`}>
+        <div className={`p-4 transition-all duration-1000 ease-in-out  ${moveLeft ? "ml-4" : "xl:ml-60 2xl:ml-80"}`}>
           <Outlet />
         </div>
 
         {/* Toggle Button - Visible with animation */}
         <div
           onClick={handleClick}
-          className={`absolute cursor-pointer w-[40px] flex items-center justify-center z-10 top-[150px] py-1 bg-slate-800 rounded-[10px] transition-all duration-500 ease-in-out 
-            ${moveLeft ? "opacity-100 scale-100" : "opacity-0 scale-0"}`}
+          className={`absolute cursor-pointer w-[40px] flex rotate-180 items-center justify-center z-10 top-[20px] py-1 bg-slate-800 rounded-[10px] transition-all duration-500 ease-in-out ml-1
+            ${moveLeft ? "opacity-100 scale-100 rotate-180" : "opacity-0 scale-0 rotate-0 "}`}
         >
           <img src={openclose} alt="toggle" />
         </div>

@@ -103,6 +103,7 @@ function OcrEngine() {
 
   return (
     <>
+    <div className="ml-5">
       {/* Heading */}
       <div className="flex justify-between">
         <div className="ml-6 flex flex-col justify-center mb-14">
@@ -116,7 +117,7 @@ function OcrEngine() {
 
       {/* Drag and drop area */}
       <div
-        className="w-[97%]  border-[1px] border-[#0056B399] rounded h-[238px] custom-dotted-border flex gap-2 items-center justify-center"
+        className="  w-[98%]  border-[1px] border-[#0056B399] rounded h-[238px] custom-dotted-border flex gap-2 items-center justify-center"
         onDragOver={handleDragOver}
         onDrop={handleDrop}
       >
@@ -141,7 +142,7 @@ function OcrEngine() {
         />
       </div>
 
-      <h3 className="mt-4 font-bold text-[32px]">Recent Documents:</h3>
+      <h3 className="mt-4  font-bold text-[32px]">Recent Documents:</h3>
 
       {/* File List */}
       <div className="bg-[#F3F3F3] w-[97%] border-[1px] border-[#D8D6D6] rounded mt-5 px-20">
@@ -225,6 +226,8 @@ function OcrEngine() {
           </div>
         </div>
       )}
+    </div>
+
     </>
   );
 }
