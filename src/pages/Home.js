@@ -10,7 +10,7 @@ const Home = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <Sidebar />
+      {/* <Sidebar /> */}
 
       {/* Main Section */}
       <div className="flex-1">

@@ -10,7 +10,7 @@ import OcrEngine from "./components/OcrEngine";
 
 const NotFound = () => {
   return (
-    <div>
+    <div className="flex justify-center items-center font-bold">
       <h2>404 - Page Not Found</h2>
     </div>
   );
