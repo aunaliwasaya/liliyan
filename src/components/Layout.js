@@ -33,9 +33,8 @@ const Layout = () => {
         {/* Toggle Button - Visible with animation */}
         <div
           onClick={handleClick}
-          className={`absolute cursor-pointer w-[40px] flex rotate-180 items-center justify-center z-10 top-[13px] py-1 bg-slate-800 rounded-[10px] transition-all duration-500 ease-in-out ml-1 hover:scale-110 
-            ${moveLeft ? "opacity-100 scale-100 rotate-180" : "opacity-0 scale-0 rotate-0 "}
-            ${moveLeft ? "xl:hidden" : ""}`}
+          className={`absolute cursor-pointer w-[40px] flex rotate-180 items-center justify-center z-10 top-[13px] py-1 bg-slate-800 rounded-[10px] transition-all duration-500 ease-in-out ml-1 hover:scale-110
+            ${moveLeft ? "opacity-100 scale-100 rotate-180" : "opacity-0 scale-0 rotate-0 "}`}
         >
           <img src={openclose} alt="toggle" />
         </div>
