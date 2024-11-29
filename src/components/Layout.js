@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import Sidebar from "./Sidebar";
 import Header from "./Header";
@@ -10,6 +10,18 @@ import lightlogo from "../assets/lightlogo.svg";
 const Layout = () => {
   const dispatch = useDispatch();
   const moveLeft = useSelector(selectMoveLeft);
+  
+  // State to track screen width
+  const [screenWidth, setScreenWidth] = useState(window.innerWidth);
+
+  // Update screen width on resize
+  useEffect(() => {
+    const handleResize = () => setScreenWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+
+    // Clean up event listener
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const handleClick = () => {
     dispatch(toggleMoveLeft());
@@ -30,8 +42,9 @@ const Layout = () => {
           <Outlet />
         </div>
 
-        {/* Toggle Button - Visible with animation */}
-        <div
+    
+       {/* Toggle Button - Visible with animation */}
+       <div
           onClick={handleClick}
           className={`absolute cursor-pointer w-[40px] flex rotate-180 items-center justify-center z-10 top-[13px] py-1 bg-slate-800 rounded-[10px] transition-all duration-500 ease-in-out ml-1 hover:scale-110
             ${moveLeft ? "opacity-100 scale-100 rotate-180" : "opacity-0 scale-0 rotate-0 "}`}
@@ -42,9 +55,9 @@ const Layout = () => {
         {/* Overlay for small screens */}
         <div
           className={`fixed top-0 left-0 w-full h-full bg-black bg-opacity-100 flex flex-col gap-16 items-center justify-center text-white p-4 transition-all duration-500 ease-in-out 
-            ${window.innerWidth < 1280 ? "block" : "hidden"}`}
+            ${screenWidth < 1280 ? "block" : "hidden"}`}
         >
-           <img src={lightlogo} alt="logo" />
+          <img src={lightlogo} alt="logo" />
           <p className="text-center text-lg">For a better user experience, please use a screen size greater than 1280px (laptops or larger).</p>
         </div>
       </div>
